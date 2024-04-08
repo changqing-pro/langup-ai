@@ -42,6 +42,8 @@ convert = {
 
 
 root = os.path.dirname(__file__)
+openai_api_key = None  # sk-...
+openai_api_base = None  # https://{your_domain}/v1
 proxy = None  # 代理
 debug = False
 

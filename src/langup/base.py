@@ -124,15 +124,16 @@ class LLM(BaseModel):
             })
         )
         self.chat_model_kwargs['openai_api_key'] = self.chat_model_kwargs['openai_api_key'] or config.openai_api_key
-        chain = get_llm_chain(
-            system=self.system,
-            llm=ChatOpenAI(
-                max_retries=2,
-                request_timeout=60,
-                **self.chat_model_kwargs or {},
-            ),
-            llm_chain_kwargs=self.llm_chain_kwargs
-        )
+        chain =''
+        #     get_llm_chain(
+        #     system=self.system,
+        #     llm=ChatOpenAI(
+        #         max_retries=2,
+        #         request_timeout=60,
+        #         **self.chat_model_kwargs or {},
+        #     ),
+        #     llm_chain_kwargs=self.llm_chain_kwargs
+        # )
         return chain
 
     class Config:
