@@ -20,6 +20,8 @@ audio_lock = threading.Lock()
 async def tts_save(tts_cfg, text):
     tts_cfg['proxy'] = config.proxy
     voice_path = tts_cfg.pop('voice_path')
+    if not os.path.exists(voice_path):
+        os.makedirs(voice_path)
     tts = edge_tts.Communicate(text=text, **tts_cfg)
     path = f"{voice_path}{str(time.time())[:10]}.mp3"
     await tts.save(path)

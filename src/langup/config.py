@@ -12,7 +12,7 @@ credential: Union['Credential', None] = None
 work_dir = './'
 
 tts = {
-    "voice": "zh-CN-XiaoyiNeural",
+    "voice": "zh-CN-YunjianNeural",
     "rate": "+0%",
     "volume": "+0%",
     "voice_path": 'voice/'

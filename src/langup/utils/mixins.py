@@ -114,7 +114,7 @@ class Logger:
             file.write(line)
         # with open(path, 'a', encoding='utf-8') as f:
         #     f.write(json.dumps(rcd.model_dump(), indent=4) + '\n')
-        self.logger.info(f"完成一轮回应:{rcd.model_dump()}")
+        # self.logger.info(f"完成一轮回应:{rcd.model_dump()}")
 
     def query(self):
         if not os.path.exists(self.record_path):

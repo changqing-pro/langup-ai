@@ -164,7 +164,8 @@ class VtuBer(base.Uploader, Auth):
     user_input: bool = False
     audio_temple: dict = {
         enums.LiveInputType.danmu: (
-            '{user_name}说:{text}'
+            # '{user_name}说:{text}'
+            '{text}'
             '{answer}'
         ),
         enums.LiveInputType.gift: (
@@ -205,38 +206,42 @@ class VtuBer(base.Uploader, Auth):
             self,
             schema: Union[dict, listener.UserSchema]
     ) -> Union[None, reaction.TTSSpeakReaction]:
-        if isinstance(schema, listener.UserSchema):
-            schema = self.console_2_live(schema)
-        self.logger.info(f"收到消息，准备回复:{schema.get('text') or str(schema)}")
-        audio_kwargs = {**schema}
-        audio_temple = self.audio_temple[schema['type']]
-        if schema['type'] is not enums.LiveInputType.gift:
-            prompt = schema['text']
-            print(prompt)
-            if self.ban_word_filter and (words := self.ban_word_filter.match(prompt)):
-                self.logger.warning(f'包含违禁词-{prompt}-{words}')
-                return
-            try:
-                param_map = {}
-                bty_url = "https://ai-api.betteryeah.com/v1/public_api/webhook/ab702f8ef6914fe394bc333fed48319c/execute_flow?Access-Key=NjUwMmNlZjAzNjI1MjQyNzY5ZmExYjU2LDEwMDAsMTY5OTQxMjI3NDAxMw==&Workspace-Id=6502cef03625242769fa1b56"
+        try:
+            if isinstance(schema, listener.UserSchema):
+                schema = self.console_2_live(schema)
+            self.logger.info(f"收到消息，准备回复:{schema.get('text') or str(schema)}")
+            audio_kwargs = {**schema}
+            audio_temple = self.audio_temple[schema['type']]
+            if schema['type'] is not enums.LiveInputType.gift:
+                prompt = schema['text']
+                # if self.ban_word_filter and (words := self.ban_word_filter.match(prompt)):
+                #     self.logger.warning(f'包含违禁词-{prompt}-{words}')
+                #     return
+                try:
+                    param_map = {}
+                    bty_url = "https://ai-api.betteryeah.com/v1/public_api/webhook/ab702f8ef6914fe394bc333fed48319c/execute_flow?Access-Key=NjUwMmNlZjAzNjI1MjQyNzY5ZmExYjU2LDEwMDAsMTY5OTQxMjI3NDAxMw==&Workspace-Id=6502cef03625242769fa1b56"
 
-                param_map["message"] = prompt
-                response = requests.post(bty_url, json=param_map)
-                print('btyResult>>>>>>>>>>>>'+response.text)
-                audio_kwargs['answer']= response.json()["data"]["run_result"]
+                    param_map["message"] = prompt
+                    response = requests.post(bty_url, json=param_map)
+                    self.logger.info(f'斑头雁返回：{response.text}')
+                    audio_kwargs['answer'] = '  ' + response.json()["data"]["run_result"]
 
-            except Exception as e:
-                self.logger.error('请求GPT异常')
-                raise e
-        audio_txt = audio_temple.format(
-            **audio_kwargs
-        )
-        self.logger.info(f'生成回复：{audio_txt}')
-        if self.ban_word_filter and (words := self.ban_word_filter.match(audio_txt)):
-            self.logger.warning(f'包含违禁词-{audio_txt}-{words}')
-            return
-        schema['type'] = schema['type'].value
-        return reaction.TTSSpeakReaction(audio_txt=audio_txt, block=True)
+                except Exception as e:
+                    self.logger.error('请求GPT异常')
+                    raise e
+            audio_txt = audio_temple.format(
+                **audio_kwargs
+            )
+            self.logger.info(f'生成回复：{audio_txt}')
+            # if self.ban_word_filter and (words := self.ban_word_filter.match(audio_txt)):
+            #     self.logger.warning(f'包含违禁词-{audio_txt}-{words}')
+            #     return
+            schema['type'] = schema['type'].value
+            return reaction.TTSSpeakReaction(audio_txt=audio_txt, block=True)
+
+        except Exception as e:
+            self.logger.error(f'在方法 execute_sop中 异常: \n{e}')
+            return None
 
 
 class ChatUP(base.Uploader, Auth):
