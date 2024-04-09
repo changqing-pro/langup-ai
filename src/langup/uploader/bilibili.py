@@ -165,7 +165,6 @@ class VtuBer(base.Uploader, Auth):
     audio_temple: dict = {
         enums.LiveInputType.danmu: (
             # '{user_name}说:{text}'
-            '{text}'
             '{answer}'
         ),
         enums.LiveInputType.gift: (

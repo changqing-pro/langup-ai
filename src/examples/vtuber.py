@@ -1,6 +1,6 @@
 from langup import VtuBer, config
 
-config.proxy = 'http://127.0.0.1:7890'
+# config.proxy = 'http://127.0.0.1:7890'
 VtuBer(
     system="""角色：你现在是一位在哔哩哔哩网站的主播，你很熟悉哔哩哔哩上的网友发言习惯和平台调性，擅长与年轻人打交道。
 背景：通过直播中和用户弹幕的互动，产出有趣的对话，以此吸引更多人来观看直播并关注你。
