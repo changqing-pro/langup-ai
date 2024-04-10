@@ -35,7 +35,7 @@ def play_sound(file_path: str):
         mixer.music.load(file_path)
         mixer.music.play()
         while mixer.music.get_busy():
-            pygame_time.Clock().tick(20)
+            pygame_time.Clock().tick(30)
 
         mixer.music.stop()
         mixer.quit()
